@@ -11,6 +11,14 @@ spring:
     username:
     password:
 
+jwt:
+  secret:
+    access:
+    refresh:
+  time:
+    access:
+    refresh:
+
 logging:
   slack:
     webhook-uri:
