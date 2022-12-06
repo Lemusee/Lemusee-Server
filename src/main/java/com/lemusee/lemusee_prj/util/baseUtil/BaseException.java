@@ -1,4 +1,4 @@
-package com.lemusee.lemusee_prj.util;
+package com.lemusee.lemusee_prj.util.baseUtil;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

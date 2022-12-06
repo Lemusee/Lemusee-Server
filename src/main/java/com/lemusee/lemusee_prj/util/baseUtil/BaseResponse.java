@@ -1,4 +1,4 @@
-package com.lemusee.lemusee_prj.util;
+package com.lemusee.lemusee_prj.util.baseUtil;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,7 +8,7 @@ import lombok.Getter;
 
 import java.util.List;
 
-import static com.lemusee.lemusee_prj.util.BaseResponseStatus.SUCCESS;
+import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.SUCCESS;
 
 
 @Getter
