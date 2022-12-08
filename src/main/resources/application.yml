@@ -11,6 +11,14 @@ spring:
     username:
     password:
 
+  jpa:
+    hibernate:
+      ddl-auto:
+    show-sql:
+    properties:
+      hibernate:
+        format_sql:
+
 jwt:
   secret:
     access:

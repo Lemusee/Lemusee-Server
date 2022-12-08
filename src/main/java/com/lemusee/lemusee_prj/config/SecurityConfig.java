@@ -39,9 +39,9 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 세션 사용 안함
 
         http
-                .addFilter(corsConfig.corsFilter())
-                .addFilter(new JwtAuthenticationFilter())
-                .addFilter(new JwtAuthorizationFilter());
+                .addFilter(corsConfig.corsFilter());
+//                .addFilter(new JwtAuthenticationFilter())
+//                .addFilter(new JwtAuthorizationFilter());
 
         http
                 .exceptionHandling()
