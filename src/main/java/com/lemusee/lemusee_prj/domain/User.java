@@ -6,10 +6,13 @@ import com.lemusee.lemusee_prj.util.type.Role;
 import com.lemusee.lemusee_prj.util.type.Team;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+@DynamicInsert
 @Entity
 @Getter
 @NoArgsConstructor
@@ -42,6 +45,9 @@ public class User extends BaseTimeEntity{
 
     @Size(max = 20)
     private String introduce;
+
+    @ColumnDefault("false")
+    private Boolean isChief;
 
     @Convert(converter = TeamConverter.class)
     private Team team;
