@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Team {
 
-    CURATOR("큐레이터 팀"), CONTENT("컨텐츠 팀"), ADMIN("어드민 팀"), CULTURE("컬쳐 팀"), INACTIVE("비활 팀");
-
+    CURATOR("CURATOR"), CONTENT("CONTENT"), ADMIN("ADMIN"), CULTURE("CULTURE"), INACTIVE("INACTIVE");
     private final String type;
 }
