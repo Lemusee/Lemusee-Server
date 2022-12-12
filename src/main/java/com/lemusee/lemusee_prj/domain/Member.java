@@ -11,12 +11,15 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @DynamicInsert
 @Entity
 @Getter
 @NoArgsConstructor
-public class User extends BaseTimeEntity{
+public class Member extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -54,4 +57,5 @@ public class User extends BaseTimeEntity{
 
     @Convert(converter = RoleConverter.class)
     private Role role;
+
 }

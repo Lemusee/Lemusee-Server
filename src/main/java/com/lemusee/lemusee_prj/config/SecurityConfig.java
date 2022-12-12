@@ -17,7 +17,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -32,24 +35,22 @@ public class SecurityConfig {
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
 
         http
+                .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http
                 .csrf().disable() // 세션 사용 안하므로
                 .formLogin().disable()
                 .httpBasic().disable();
         http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 세션 사용 안함
-
         http
-                .addFilter(corsConfig.corsFilter());
-//                .addFilter(new JwtAuthenticationFilter())
-//                .addFilter(new JwtAuthorizationFilter());
-
-        http
+                .addFilter(corsConfig.corsFilter())
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPointHandler()) // 인증 예외 처리
                 .accessDeniedHandler(new CustomAccessDeniedHandler()); // 인가 예외 처리
         http
                 .authorizeRequests()
                 // swagger
+                .antMatchers("/auth/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/swagger/**").permitAll()
@@ -63,10 +64,8 @@ public class SecurityConfig {
 
         return http.build();
     }
-
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }
