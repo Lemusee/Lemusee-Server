@@ -17,4 +17,8 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
+    public void createUser(JoinRequestDto joinRequestDto) {
+        Member member = joinRequestDto.toMember();
+        memberRepository.save(member);
+    }
 }

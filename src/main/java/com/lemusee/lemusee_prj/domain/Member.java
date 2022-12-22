@@ -65,13 +65,5 @@ public class Member extends BaseTimeEntity{
     @Convert(converter = RoleConverter.class)
     private Role role;
 
-    public static Member ofUser(JoinRequestDto joinRequestDto) {
-        return Member.builder()
-                .nickname(joinRequestDto.getNickname())
-                .email(joinRequestDto.getEmail())
-                .password(joinRequestDto.getPassword())
-                .role(Role.USER)
-                .build();
-    }
 
 }

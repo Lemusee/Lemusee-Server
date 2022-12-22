@@ -24,7 +24,7 @@ public class AuthController {
 
     @PostMapping("/join")
     public BaseResponse<String> join(@RequestBody JoinRequestDto joinRequestDto) {
-        authService.join(joinRequestDto);
+        authService.createUser(joinRequestDto);
         return new BaseResponse<>(SUCCESS);
     }
 }
