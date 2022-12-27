@@ -13,11 +13,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+import static com.lemusee.lemusee_prj.util.Constant.PROVIDER_NONE;
 import static java.util.stream.Collectors.toList;
 
 @DynamicInsert
@@ -31,7 +33,7 @@ public class Member extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, length = 10, unique = true)
+    @Column(nullable = false, length = 10)
     @Size(max = 10)
     private String nickname;
 
@@ -59,11 +61,18 @@ public class Member extends BaseTimeEntity{
     @ColumnDefault("false")
     private Boolean isChief;
 
+    @ColumnDefault("'none'")
+    private String provider;
+
+    private String providerId;
+
     @Convert(converter = TeamConverter.class)
     private Team team;
 
     @Convert(converter = RoleConverter.class)
     private Role role;
-
+    public void encodePassword(PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(password);
+    }
 
 }
