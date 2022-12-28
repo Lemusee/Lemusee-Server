@@ -1,8 +1,10 @@
 package com.lemusee.lemusee_prj.controller;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.lemusee.lemusee_prj.dto.JoinRequestDto;
 import com.lemusee.lemusee_prj.dto.LoginRequestDto;
 import com.lemusee.lemusee_prj.dto.LoginResponseDto;
+import com.lemusee.lemusee_prj.dto.TokenDto;
 import com.lemusee.lemusee_prj.service.AuthService;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseException;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseResponse;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +43,7 @@ public class AuthController {
     @PostMapping("/join")
     public BaseResponse<BaseResponseStatus> join(@RequestBody JoinRequestDto joinRequestDto) {
         try {
-            authService.createMember(joinRequestDto);
+            authService.join(joinRequestDto);
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException error) {
             return new BaseResponse<>(error.getStatus());
@@ -53,40 +56,8 @@ public class AuthController {
      *
      * @Body loginRequestDto
      **/
-//    @PostMapping("/signin")
-//    public BaseResponse<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-//        try {
-//            user = userProvider.retrieveByEmail(postSigninReq.getEmail());
-//            user.setPassword(postSigninReq.getPassword());
-//        } catch (BaseException e) {
-//            return new BaseResponse(e.getStatus());
-//        }
-//
-//
-//        Authentication authentication = null;
-//        try {
-//            authentication = attemptAuthentication(user);
-//        } catch (BaseException e) {
-//            return new BaseResponse<>(e.getStatus());
-//        }
-//        PrincipalDetails userEntity = (PrincipalDetails) authentication.getPrincipal();
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        Integer userId = userEntity.getUser().getId();
-//
-//        Token token = jwtTokenProvider.createToken(userId);
-//        String accessToken = token.getAccessToken();
-//        String refreshToken = token.getRefreshToken();
-//
-//        PostSigninRes postSigninRes = new PostSigninRes(accessToken,userId);
-//        authService.registerRefreshToken(userId, refreshToken);
-//
-//        ResponseCookie cookie = ResponseCookie.from("refreshToken",refreshToken)
-//                .httpOnly(true)
-//                .path("/")
-//                .build();
-//        response.setHeader("Set-Cookie", cookie.toString());
-//
-//
-//        return new BaseResponse<>(postSigninRes);
-//    }
+    @PostMapping("/login")
+    public BaseResponse<TokenDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+        return new BaseResponse<>(authService.login(loginRequestDto));
+    }
 }
