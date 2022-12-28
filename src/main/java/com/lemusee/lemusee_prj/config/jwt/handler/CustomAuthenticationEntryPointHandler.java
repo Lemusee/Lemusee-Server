@@ -23,7 +23,7 @@ public class CustomAuthenticationEntryPointHandler implements AuthenticationEntr
         /**
          * 토큰 없는 경우
          */
-        if(exception == null) {
+        if(exception.isEmpty()) {
             errorCode = EMPTY_JWT;
             setResponse(response, errorCode);
             return;

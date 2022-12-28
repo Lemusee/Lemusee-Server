@@ -3,6 +3,10 @@ package com.lemusee.lemusee_prj.config.jwt.filter;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import com.lemusee.lemusee_prj.config.jwt.JwtTokenProvider;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import jdk.swing.interop.SwingInterOpUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,6 +47,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         try {
             String jwtHeader = request.getHeader(AUTHORIZATION_HEADER);
 
+            if (!StringUtils.hasText(jwtHeader)) {
+                request.setAttribute("exception", "");
+            }
             if (StringUtils.hasText(jwtHeader) && jwtTokenProvider.validateToken(jwtHeader)) {
                 Integer userId = Integer.parseInt(jwtTokenProvider.getUseridFromAcs(jwtHeader));
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwtHeader);
@@ -48,10 +57,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
                 request.setAttribute("user_id", userId);
             }
-
-            chain.doFilter(request, response);
-        } catch (Exception e) {
-            logger.error("Could not set user authentication in security context", e);
+        } catch (BaseException e) {
+            request.setAttribute("exception", e.getStatus().getCode());
         }
+        chain.doFilter(request, response);
     }
 }

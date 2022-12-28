@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import static com.lemusee.lemusee_prj.util.Constant.PROVIDER_NONE;
 import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.USERS_EMPTY_USER_EMAIL;
 
 @Slf4j
@@ -22,7 +23,7 @@ public class PrincipalDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         log.info("LOGIN");
-        Member member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmailAndProvider(email,PROVIDER_NONE)
                 .orElseThrow(() -> new UsernameNotFoundException(USERS_EMPTY_USER_EMAIL.getMessage()));
         return PrincipalDetails.of(member);
     }

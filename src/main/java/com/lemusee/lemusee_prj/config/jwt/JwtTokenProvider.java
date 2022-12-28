@@ -1,5 +1,7 @@
 package com.lemusee.lemusee_prj.config.jwt;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
+import com.lemusee.lemusee_prj.domain.PrincipalDetails;
 import com.lemusee.lemusee_prj.dto.TokenDto;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseException;
 import io.jsonwebtoken.*;
@@ -22,7 +24,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.EXPIRED_JWT;
+import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.*;
 
 @Slf4j
 @Component
@@ -54,7 +56,7 @@ public class JwtTokenProvider {
         Date now = new Date();
 
         String accessToken = Jwts.builder()
-                .setSubject(authentication.getName()) // payload "sub": "name"
+                .setSubject(((PrincipalDetails)authentication.getPrincipal()).getUserId().toString()) // payload "sub": "pk"
                 .claim(AUTHORITIES_KEY,authorities) // payload "auth": "ROLE_USER"
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + JWT_ACCESS_TOKEN_EXPTIME)) // set Expire Time
@@ -62,7 +64,7 @@ public class JwtTokenProvider {
                 .compact();
 
         String refreshToken =  Jwts.builder()
-                .setSubject(authentication.getName()) // payload "sub": "name"
+                .setSubject(((PrincipalDetails)authentication.getPrincipal()).getUserId().toString()) // payload "sub": "pk"
                 .claim(AUTHORITIES_KEY,authorities) // payload "auth": "ROLE_USER"
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + JWT_REFRESH_TOKEN_EXPTIME)) // set Expire Time
@@ -81,7 +83,7 @@ public class JwtTokenProvider {
 
         Date now = new Date();
         return Jwts.builder()
-                .setSubject(authentication.getName()) // payload "sub": "name"
+                .setSubject(((PrincipalDetails)authentication.getPrincipal()).getUserId().toString()) // payload "sub": "pk"
                 .claim(AUTHORITIES_KEY,authorities) // payload "auth": "ROLE_USER"
                 .setExpiration(new Date(now.getTime() + JWT_ACCESS_TOKEN_EXPTIME)) // set Expire Time
                 .signWith(accessKey, SignatureAlgorithm.HS256)  // 사용할 암호화 알고리즘과
@@ -95,8 +97,9 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
 
         Date now = new Date();
+
         return Jwts.builder()
-                .setSubject(authentication.getName()) // payload "sub": "name"
+                .setSubject(((PrincipalDetails)authentication.getPrincipal()).getUserId().toString()) // payload "sub": "pk"
                 .claim(AUTHORITIES_KEY,authorities) // payload "auth": "ROLE_USER"
                 .setExpiration(new Date(now.getTime() + JWT_REFRESH_TOKEN_EXPTIME)) // set Expire Time
                 .signWith(refreshKey, SignatureAlgorithm.HS256) // 사용할 암호화 알고리즘과
@@ -138,12 +141,16 @@ public class JwtTokenProvider {
             return true;
         } catch (SignatureException ex) {
             log.error("Invalid JWT signature");
+            throw new BaseException(INVALID_JWT);
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
+            throw new BaseException(INVALID_JWT);
         } catch (ExpiredJwtException ex) {
             log.error("Expired JWT token");
+            throw new BaseException(EXPIRED_JWT);
         } catch (UnsupportedJwtException ex) {
             log.error("Unsupported JWT token");
+            throw new BaseException(UNSUPPORTED_JWT);
         } catch (IllegalArgumentException ex) {
             log.error("JWT claims string is empty.");
         }

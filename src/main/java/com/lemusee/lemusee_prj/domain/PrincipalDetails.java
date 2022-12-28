@@ -16,18 +16,23 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PrincipalDetails implements UserDetails{
+    private Integer userId;
     private String nickname;
     private String password;
     private String role;
 
     public static UserDetails of(Member member) {
         return PrincipalDetails.builder()
+                .userId(member.getId())
                 .nickname(member.getNickname())
                 .password(member.getPassword())
                 .role(member.getRole().getType())
                 .build();
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
     @Override
     public String getUsername() {
         return nickname;
