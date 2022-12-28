@@ -70,8 +70,7 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenDto tokenDto = jwtTokenProvider.createToken(authentication);
-        return tokenDto;
+        return jwtTokenProvider.createToken(authentication);
     }
 
 

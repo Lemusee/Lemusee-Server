@@ -50,7 +50,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             if (!StringUtils.hasText(jwtHeader)) {
                 request.setAttribute("exception", "");
             }
-            if (StringUtils.hasText(jwtHeader) && jwtTokenProvider.validateToken(jwtHeader)) {
+            if (StringUtils.hasText(jwtHeader) && jwtTokenProvider.validateAccessToken(jwtHeader)) {
                 Integer userId = Integer.parseInt(jwtTokenProvider.getUseridFromAcs(jwtHeader));
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwtHeader);
                 SecurityContextHolder.getContext().setAuthentication(authentication);

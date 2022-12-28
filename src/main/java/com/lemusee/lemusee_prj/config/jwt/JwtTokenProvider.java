@@ -133,7 +133,7 @@ public class JwtTokenProvider {
     }
 
     // Jwt 토큰 유효성 검사
-    public boolean validateToken(String jwtHeader) throws BaseException {
+    public boolean validateAccessToken(String jwtHeader) throws BaseException {
         try {
             Jwts
                     .parserBuilder().setSigningKey(accessKey).build()
@@ -155,6 +155,30 @@ public class JwtTokenProvider {
             log.error("JWT claims string is empty.");
         }
         return false;
+    }
+
+    // Refresh 토큰 유효성 검사
+    public void validRefreshToken(String token) throws BaseException {
+        try {
+            Jwts
+                    .parserBuilder().setSigningKey(refreshKey).build()
+                    .parseClaimsJws(token);
+        } catch (SignatureException ex) {
+            log.error("Invalid JWT signature");
+            throw new BaseException(INVALID_JWT);
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token");
+            throw new BaseException(INVALID_JWT);
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+            throw new BaseException(EXPIRED_JWT);
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token");
+            throw new BaseException(UNSUPPORTED_JWT);
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty.");
+            throw new BaseException(UNKNOWN_ERROR_JWT);
+        }
     }
 
 }

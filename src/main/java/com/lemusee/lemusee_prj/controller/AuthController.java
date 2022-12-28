@@ -89,9 +89,4 @@ public class AuthController {
      * @cookie refreshToken
      * @return accessToken
      */
-//    @PostMapping("/jwt")
-//    public BaseResponse<PostAccessRes> postAccess(@CookieValue(value = "refreshToken", required = false) String refreshToken) {
-//
-//    }
-
 }
