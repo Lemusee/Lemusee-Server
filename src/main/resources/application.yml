@@ -12,6 +12,8 @@ spring:
     password:
 
   jpa:
+    database:
+    database-platform:
     hibernate:
       ddl-auto:
     show-sql:
