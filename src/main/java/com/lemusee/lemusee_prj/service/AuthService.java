@@ -46,7 +46,6 @@ public class AuthService {
         if (memberRepository.findByEmailAndProvider(joinRequestDto.getEmail(),PROVIDER_NONE).isPresent()) {
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
         }
-
         Member member = joinRequestDto.toMember();
         member.encodePassword(passwordEncoder);
         memberRepository.save(member);
