@@ -10,6 +10,8 @@ import com.lemusee.lemusee_prj.repository.MemberRepository;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -17,6 +19,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static com.lemusee.lemusee_prj.util.Constant.PROVIDER_NONE;
 import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.POST_USERS_EXISTS_EMAIL;
@@ -28,10 +33,12 @@ import static org.hibernate.id.enhanced.OptimizerFactory.NONE;
 @Transactional
 @Slf4j
 public class AuthService {
+    @Value("${jwt.time.refresh}") private Long JWT_REFRESH_TOKEN_EXPTIME;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     public void join(JoinRequestDto joinRequestDto) throws BaseException {
@@ -70,7 +77,14 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        return jwtTokenProvider.createToken(authentication);
+        TokenDto tokenDto = jwtTokenProvider.createToken(authentication);
+
+        // 4. redis에 RefreshToken 저장
+        redisTemplate.opsForValue()
+                .set("refreshToken:" + authentication.getName(), tokenDto.getRefreshToken(),
+                        JWT_REFRESH_TOKEN_EXPTIME, TimeUnit.MILLISECONDS);
+
+        return tokenDto;
     }
 
 

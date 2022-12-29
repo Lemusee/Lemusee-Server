@@ -19,6 +19,12 @@ spring:
       hibernate:
         format_sql:
 
+  cache:
+    type:
+  redis:
+    host:
+    port:
+
 jwt:
   secret:
     access:
