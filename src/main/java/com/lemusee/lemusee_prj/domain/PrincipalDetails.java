@@ -17,14 +17,14 @@ import java.util.Collection;
 @AllArgsConstructor
 public class PrincipalDetails implements UserDetails{
     private Integer userId;
-    private String nickname;
+    private String email;
     private String password;
     private String role;
 
     public static UserDetails of(Member member) {
         return PrincipalDetails.builder()
                 .userId(member.getId())
-                .nickname(member.getNickname())
+                .email(member.getEmail())
                 .password(member.getPassword())
                 .role(member.getRole().getType())
                 .build();
@@ -33,9 +33,10 @@ public class PrincipalDetails implements UserDetails{
     public Integer getUserId() {
         return userId;
     }
+
     @Override
     public String getUsername() {
-        return nickname;
+        return email;
     }
 
     @Override

@@ -33,12 +33,12 @@ public class Member extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
+    private String email;
+
     @Column(nullable = false, length = 10)
     @Size(max = 10)
     private String nickname;
-
-    @Column(nullable = false)
-    private String email;
 
     @Column(nullable = false)
     private String password;

@@ -31,16 +31,17 @@ import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.SUCCESS;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Value("${jwt.time.refresh}") private Long JWT_REFRESH_TOKEN_EXPTIME;
+    @Value("${jwt.time.refresh}")
+    private Long JWT_REFRESH_TOKEN_EXPTIME;
 
     private final AuthService authService;
 
     /**
-    * 1.1 일반 회원가입 API
-    * [POST] /auth/join
-    *
-    * @Body joinRequestDto
-    * */
+     * 1.1 일반 회원가입 API
+     * [POST] /auth/join
+     *
+     * @Body joinRequestDto
+     */
     @PostMapping("/join")
     public BaseResponse<BaseResponseStatus> join(@RequestBody JoinRequestDto joinRequestDto) {
         try {
@@ -72,7 +73,7 @@ public class AuthController {
     public BaseResponse<String> loginAuto(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         TokenDto tokenDto = authService.loginAuto(loginRequestDto);
 
-        ResponseCookie cookie = ResponseCookie.from("refreshToken",tokenDto.getRefreshToken())
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
                 .maxAge(JWT_REFRESH_TOKEN_EXPTIME)
                 .httpOnly(true)
                 .path("/")
@@ -89,4 +90,12 @@ public class AuthController {
      * @cookie refreshToken
      * @return accessToken
      */
+    @PostMapping("/jwt")
+    public BaseResponse<String> reissue(@CookieValue(value = "refreshToken", required = false) String refreshToken, @RequestBody String accessToken) {
+        try {
+            return new BaseResponse<>(authService.reissue(refreshToken, accessToken));
+        } catch (BaseException error) {
+            return new BaseResponse<>(error.getStatus());
+        }
+    }
 }
