@@ -40,7 +40,7 @@ public class AuthController {
 
     /**
      * 1.1 일반 회원가입 API
-     * [POST] /auth/join
+     * @POST /auth/join
      *
      * @Body joinRequestDto
      */
@@ -57,9 +57,10 @@ public class AuthController {
 
     /**
      * 1.2 일반 로그인 API
-     * [POST] /auth/login
+     * @POST /auth/login
      *
      * @Body loginRequestDto
+     * @return accessToken
      **/
     @PostMapping("/login")
     public BaseResponse<String> login(@RequestBody LoginRequestDto loginRequestDto) {
@@ -68,9 +69,10 @@ public class AuthController {
 
     /**
      * 1.3 자동 로그인 API
-     * [POST] /auth/login/auto
+     * @POST /auth/login/auto
      *
-     * @Body loginRequestDto
+     * @body loginRequestDto
+     * @return accessToken
      **/
     @PostMapping("/login/auto")
     public BaseResponse<String> loginAuto(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
@@ -88,7 +90,7 @@ public class AuthController {
 
     /**
      * 1.4 토큰 재발급 api
-     * [GET] /auth/jwt
+     * @POST /auth/jwt
      * access token 만료시 재발급
      * @cookie refreshToken
      * @return accessToken
@@ -99,6 +101,38 @@ public class AuthController {
             return new BaseResponse<>(authService.reissue(refreshToken, accessToken));
         } catch (BaseException error) {
             writeExceptionWithRequest(error, request);
+            return new BaseResponse<>(error.getStatus());
+        }
+    }
+
+    /**
+     * 1.5 이메일 중복 체크 api
+     * @GET /email?email=
+     *
+     * @param email
+     */
+    @GetMapping("/email")
+    public BaseResponse<BaseResponseStatus> checkEmailDuplicate(@RequestParam(required = true) String email) {
+        try {
+            authService.checkEmailDuplicate(email);
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException error) {
+            return new BaseResponse<>(error.getStatus());
+        }
+    }
+
+    /**
+     * 1.6 이메일 유효성 체크 api
+     * @GET /auth/email/existence?email=
+     *
+     * @param email
+     */
+    @GetMapping("/email/existence")
+    public BaseResponse<String> checkEmailExistence(HttpServletRequest request, @RequestParam(required = true) String email) {
+        try {
+            authService.checkEmailExistence(email);
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException error) {
             return new BaseResponse<>(error.getStatus());
         }
     }

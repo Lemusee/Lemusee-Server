@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,9 +46,7 @@ public class AuthService {
 
     public void join(JoinRequestDto joinRequestDto) throws BaseException {
 
-        if (memberRepository.findByEmailAndProvider(joinRequestDto.getEmail(),PROVIDER_NONE).isPresent()) {
-            throw new BaseException(POST_USERS_EXISTS_EMAIL);
-        }
+        checkEmailDuplicate(joinRequestDto.getEmail());
         Member member = joinRequestDto.toMember();
         member.encodePassword(passwordEncoder);
         memberRepository.save(member);
@@ -84,6 +83,20 @@ public class AuthService {
             throw new BaseException(DIFFERENT_REFRESH_TOKEN);
         }
         return jwtTokenProvider.createAccessToken(authentication);
+    }
+
+    @Transactional(readOnly = true)
+    public void checkEmailDuplicate(String email) throws BaseException{
+        if (memberRepository.existsByEmailAndProvider(email, PROVIDER_NONE)) {
+            throw new BaseException(USERS_EXISTS_EMAIL);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void checkEmailExistence(String email) throws BaseException{
+        if (!memberRepository.existsByEmailAndProvider(email, PROVIDER_NONE)) {
+            throw new BaseException(USERS_EMPTY_USER_EMAIL);
+        }
     }
 
     private Authentication attemptAuthentication(LoginRequestDto loginRequestDto){
