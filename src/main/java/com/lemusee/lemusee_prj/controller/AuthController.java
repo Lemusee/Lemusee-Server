@@ -21,9 +21,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.service.TokenEndpoint;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.SUCCESS;
+import static com.lemusee.lemusee_prj.util.errorLogUtil.ErrorLogWriter.writeExceptionWithRequest;
 
 @Slf4j
 @RestController
@@ -43,11 +45,12 @@ public class AuthController {
      * @Body joinRequestDto
      */
     @PostMapping("/join")
-    public BaseResponse<BaseResponseStatus> join(@RequestBody JoinRequestDto joinRequestDto) {
+    public BaseResponse<BaseResponseStatus> join(HttpServletRequest request, @RequestBody JoinRequestDto joinRequestDto) {
         try {
             authService.join(joinRequestDto);
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException error) {
+            writeExceptionWithRequest(error, request);
             return new BaseResponse<>(error.getStatus());
         }
     }
@@ -91,10 +94,11 @@ public class AuthController {
      * @return accessToken
      */
     @PostMapping("/jwt")
-    public BaseResponse<String> reissue(@CookieValue(value = "refreshToken", required = false) String refreshToken, @RequestBody String accessToken) {
+    public BaseResponse<String> reissue(HttpServletRequest request, @CookieValue(value = "refreshToken", required = false) String refreshToken, @RequestBody String accessToken) {
         try {
             return new BaseResponse<>(authService.reissue(refreshToken, accessToken));
         } catch (BaseException error) {
+            writeExceptionWithRequest(error, request);
             return new BaseResponse<>(error.getStatus());
         }
     }
