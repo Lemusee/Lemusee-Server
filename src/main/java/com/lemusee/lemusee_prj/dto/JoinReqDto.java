@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JoinRequestDto {
+public class JoinReqDto {
 
     private String email;
     private String password;

@@ -1,12 +1,10 @@
 package com.lemusee.lemusee_prj.domain;
 
-import com.lemusee.lemusee_prj.dto.JoinRequestDto;
 import com.lemusee.lemusee_prj.util.converter.RoleConverter;
 import com.lemusee.lemusee_prj.util.converter.TeamConverter;
 import com.lemusee.lemusee_prj.util.type.Role;
 import com.lemusee.lemusee_prj.util.type.Team;
 
-import io.swagger.annotations.Contact;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,10 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.List;
-
-import static com.lemusee.lemusee_prj.util.Constant.PROVIDER_NONE;
-import static java.util.stream.Collectors.toList;
 
 @DynamicInsert
 @Entity
@@ -73,6 +67,10 @@ public class Member extends BaseTimeEntity{
     private Role role;
     public void encodePassword(PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(password);
+    }
+
+    public void updatePassword(PasswordEncoder passwordEncoder, String newPassword) {
+        this.password = passwordEncoder.encode(newPassword);
     }
 
 }

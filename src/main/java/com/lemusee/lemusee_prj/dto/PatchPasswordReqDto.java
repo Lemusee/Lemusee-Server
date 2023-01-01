@@ -3,7 +3,7 @@ package com.lemusee.lemusee_prj.dto;
 import lombok.Data;
 
 @Data
-public class LoginRequestDto {
+public class PatchPasswordReqDto {
     private String email;
-    private String password;
+    private String newPassword;
 }

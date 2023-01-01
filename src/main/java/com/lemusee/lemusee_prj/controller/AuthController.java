@@ -1,9 +1,8 @@
 package com.lemusee.lemusee_prj.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
-import com.lemusee.lemusee_prj.dto.JoinRequestDto;
-import com.lemusee.lemusee_prj.dto.LoginRequestDto;
-import com.lemusee.lemusee_prj.dto.LoginResponseDto;
+import com.lemusee.lemusee_prj.dto.JoinReqDto;
+import com.lemusee.lemusee_prj.dto.LoginReqDto;
+import com.lemusee.lemusee_prj.dto.PatchPasswordReqDto;
 import com.lemusee.lemusee_prj.dto.TokenDto;
 import com.lemusee.lemusee_prj.service.AuthService;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseException;
@@ -15,11 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.service.TokenEndpoint;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,9 +40,9 @@ public class AuthController {
      * @Body joinRequestDto
      */
     @PostMapping("/join")
-    public BaseResponse<BaseResponseStatus> join(HttpServletRequest request, @RequestBody JoinRequestDto joinRequestDto) {
+    public BaseResponse<BaseResponseStatus> join(HttpServletRequest request, @RequestBody JoinReqDto joinReqDto) {
         try {
-            authService.join(joinRequestDto);
+            authService.join(joinReqDto);
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException error) {
             writeExceptionWithRequest(error, request);
@@ -63,8 +58,8 @@ public class AuthController {
      * @return accessToken
      **/
     @PostMapping("/login")
-    public BaseResponse<String> login(@RequestBody LoginRequestDto loginRequestDto) {
-        return new BaseResponse<>(authService.login(loginRequestDto));
+    public BaseResponse<String> login(@RequestBody LoginReqDto loginReqDto) {
+        return new BaseResponse<>(authService.login(loginReqDto));
     }
 
     /**
@@ -75,8 +70,8 @@ public class AuthController {
      * @return accessToken
      **/
     @PostMapping("/login/auto")
-    public BaseResponse<String> loginAuto(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        TokenDto tokenDto = authService.loginAuto(loginRequestDto);
+    public BaseResponse<String> loginAuto(@RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
+        TokenDto tokenDto = authService.loginAuto(loginReqDto);
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
                 .maxAge(JWT_REFRESH_TOKEN_EXPTIME)
@@ -133,6 +128,23 @@ public class AuthController {
             authService.checkEmailExistence(email);
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException error) {
+            return new BaseResponse<>(error.getStatus());
+        }
+    }
+
+    /**
+     * 1.7 비밀번호 재설정 (비 로그인 상태) API
+     * @PATCH /auth/password
+     *
+     * @param patchPasswordReqDto
+     */
+    @PatchMapping("/password")
+    public BaseResponse<BaseResponseStatus> patchPassword(HttpServletRequest request, @RequestBody PatchPasswordReqDto patchPasswordReqDto) {
+        try {
+            authService.modifyPassword(patchPasswordReqDto);
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        } catch (BaseException error) {
+            writeExceptionWithRequest(error, request);
             return new BaseResponse<>(error.getStatus());
         }
     }
