@@ -55,7 +55,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             }
             if (StringUtils.hasText(jwtHeader) && jwtTokenProvider.validateAccessToken(jwtHeader)) {
                 // (추가) Redis 에 해당 accessToken logout 여부 확인
-                if (String.valueOf(redisTemplate.opsForValue().get(jwtHeader)).isEmpty()) {
+                String isLogout = (String) redisTemplate.opsForValue().get(jwtHeader);
+                if (ObjectUtils.isEmpty(isLogout)) {
                     Authentication authentication = jwtTokenProvider.getAuthentication(jwtHeader);
                     String email = authentication.getName();
                     SecurityContextHolder.getContext().setAuthentication(authentication);
