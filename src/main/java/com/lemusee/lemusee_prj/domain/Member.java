@@ -1,5 +1,6 @@
 package com.lemusee.lemusee_prj.domain;
 
+import com.lemusee.lemusee_prj.dto.MemberInfoResDto;
 import com.lemusee.lemusee_prj.util.converter.RoleConverter;
 import com.lemusee.lemusee_prj.util.converter.TeamConverter;
 import com.lemusee.lemusee_prj.util.type.Role;

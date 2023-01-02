@@ -8,6 +8,7 @@ import com.lemusee.lemusee_prj.dto.PatchPasswordReqDto;
 import com.lemusee.lemusee_prj.dto.TokenDto;
 import com.lemusee.lemusee_prj.repository.MemberRepository;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseException;
+import com.lemusee.lemusee_prj.util.mapper.DataMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
