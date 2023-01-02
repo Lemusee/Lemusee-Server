@@ -70,6 +70,7 @@ public class AuthService {
     public String reissue(String refreshToken, String accessToken) throws BaseException{
         // 토큰 유효성 검증
         jwtTokenProvider.validRefreshToken(refreshToken);
+
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
         // Redis의 토큰과 비교

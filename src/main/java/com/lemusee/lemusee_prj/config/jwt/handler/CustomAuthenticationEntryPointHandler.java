@@ -16,7 +16,7 @@ import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.*;
 public class CustomAuthenticationEntryPointHandler implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        String exception = (String)request.getAttribute("exception").toString();
+        String exception = String.valueOf(request.getAttribute("exception"));
         log.debug("log: exception: {} ", exception);
         BaseResponseStatus errorCode;
 

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,12 +28,14 @@ public class SecurityConfig {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
     private final CorsConfig corsConfig;
+    private final RedisTemplate<String, Object> redisTemplate;
+
 
     @Bean
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
         http
                 .csrf().disable() // 세션 사용 안하므로
                 .formLogin().disable()

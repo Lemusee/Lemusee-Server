@@ -4,7 +4,6 @@ import com.lemusee.lemusee_prj.domain.Member;
 import com.lemusee.lemusee_prj.util.type.Role;
 import com.lemusee.lemusee_prj.util.type.Team;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

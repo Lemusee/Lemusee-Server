@@ -9,10 +9,12 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import jdk.swing.interop.SwingInterOpUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,14 +26,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.lemusee.lemusee_prj.util.Constant.AUTHORIZATION_HEADER;
 import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.*;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
-    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -51,11 +54,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 request.setAttribute("exception", "");
             }
             if (StringUtils.hasText(jwtHeader) && jwtTokenProvider.validateAccessToken(jwtHeader)) {
-                Integer userId = Integer.parseInt(jwtTokenProvider.getUseridFromAcs(jwtHeader));
-                Authentication authentication = jwtTokenProvider.getAuthentication(jwtHeader);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                // (추가) Redis 에 해당 accessToken logout 여부 확인
+                if (String.valueOf(redisTemplate.opsForValue().get(jwtHeader)).isEmpty()) {
+                    Authentication authentication = jwtTokenProvider.getAuthentication(jwtHeader);
+                    String email = authentication.getName();
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                request.setAttribute("user_id", userId);
+                    request.setAttribute("email", email);
+                }
             }
         } catch (BaseException e) {
             request.setAttribute("exception", e.getStatus().getCode());

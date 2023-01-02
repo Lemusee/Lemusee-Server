@@ -56,15 +56,15 @@ public class JwtTokenProvider {
         Date now = new Date();
 
         String accessToken = Jwts.builder()
-                .setSubject(((PrincipalDetails)authentication.getPrincipal()).getUserId().toString()) // payload "sub": "pk"
-                .claim(AUTHORITIES_KEY,authorities) // payload "auth": "ROLE_USER"
+                .setSubject(authentication.getName()) // payload "sub": "pk"
+                .claim(AUTHORITIES_KEY, authorities) // payload "auth": "ROLE_USER"
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + JWT_ACCESS_TOKEN_EXPTIME)) // set Expire Time
                 .signWith(accessKey, SignatureAlgorithm.HS512)  // 사용할 암호화 알고리즘과
                 .compact();
 
         String refreshToken =  Jwts.builder()
-                .setSubject(((PrincipalDetails)authentication.getPrincipal()).getUserId().toString()) // payload "sub": "pk"
+                .setSubject(authentication.getName()) // payload "sub": "pk"
                 .claim(AUTHORITIES_KEY,authorities) // payload "auth": "ROLE_USER"
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + JWT_REFRESH_TOKEN_EXPTIME)) // set Expire Time
@@ -83,7 +83,7 @@ public class JwtTokenProvider {
 
         Date now = new Date();
         return Jwts.builder()
-                .setSubject(((PrincipalDetails)authentication.getPrincipal()).getUserId().toString()) // payload "sub": "pk"
+                .setSubject(authentication.getName()) // payload "sub": "pk"
                 .claim(AUTHORITIES_KEY,authorities) // payload "auth": "ROLE_USER"
                 .setExpiration(new Date(now.getTime() + JWT_ACCESS_TOKEN_EXPTIME)) // set Expire Time
                 .signWith(accessKey, SignatureAlgorithm.HS256)  // 사용할 암호화 알고리즘과
@@ -121,15 +121,17 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(claims.getSubject(), "", authorities);
     }
 
-    // 토큰에서 회원 정보 추출
-    public String getUseridFromAcs(String token) {
-        return Jwts.parserBuilder().setSigningKey(accessKey).build()
-                .parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public String getUseridFromRef(String token) {
-        return Jwts.parserBuilder().setSigningKey(refreshKey).build()
-                .parseClaimsJws(token).getBody().getSubject();
+    public Long getExpiration(String accessToken) {
+        // accessToken 남은 유효시간
+        Date expiration = Jwts.parserBuilder()
+                .setSigningKey(accessKey)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .getExpiration();
+        // 현재 시간
+        Date now = new Date();
+        return (expiration.getTime() - now.getTime());
     }
 
     // Jwt 토큰 유효성 검사
