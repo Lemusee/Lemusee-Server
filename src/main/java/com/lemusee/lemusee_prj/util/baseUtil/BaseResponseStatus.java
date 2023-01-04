@@ -21,6 +21,7 @@ public enum BaseResponseStatus {
     EMPTY_JWT(false, 2001, "JWT를 입력해주세요."),
     INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),
     EXPIRED_JWT(false, 2003, "만료된 JWT입니다."),
+    NOT_POSSIBLE_REISSUE(false, 2009, "토큰 재발급이 불가합니다."),
     UNSUPPORTED_JWT(false, 2007, "지원하지않는 JWT입니다."),
     INVALID_USER_JWT(false,2004,"권한이 없는 유저의 접근입니다."),
     INVALID_AUTH(false, 2005, "유효하지 않은 회원 정보입니다."),

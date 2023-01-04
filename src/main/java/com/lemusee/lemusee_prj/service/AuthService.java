@@ -67,13 +67,12 @@ public class AuthService {
         return tokenDto;
     }
 
-    public String reissue(String refreshToken) throws BaseException{
-        // 토큰 유효성 검증
+    public String reissue(String refreshToken, String accessToken) throws BaseException{
+        jwtTokenProvider.checkAccessTokenExpiration(accessToken);
         jwtTokenProvider.validRefreshToken(refreshToken);
 
         Authentication authentication = jwtTokenProvider.getAuthenticationFromRef(refreshToken);
 
-        // Redis의 토큰과 비교
         String redisRefreshToken = String.valueOf(redisTemplate.opsForValue().get("refreshToken:" + authentication.getName()));
         if(!redisRefreshToken.equals(refreshToken)) {
             throw new BaseException(DIFFERENT_REFRESH_TOKEN);

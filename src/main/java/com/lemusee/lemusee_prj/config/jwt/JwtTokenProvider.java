@@ -148,6 +148,17 @@ public class JwtTokenProvider {
         return (expiration.getTime() - now.getTime());
     }
 
+    public void checkAccessTokenExpiration(String accessToken) throws BaseException {
+        try {
+            Jwts
+                    .parserBuilder().setSigningKey(accessKey).build()
+                    .parseClaimsJws(accessToken);
+            throw new BaseException(NOT_POSSIBLE_REISSUE);
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+        }
+    }
+
     // Jwt 토큰 유효성 검사
     public boolean validateAccessToken(String jwtHeader) throws BaseException {
         try {
