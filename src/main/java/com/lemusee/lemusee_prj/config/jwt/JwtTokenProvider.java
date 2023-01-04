@@ -99,7 +99,7 @@ public class JwtTokenProvider {
         Date now = new Date();
 
         return Jwts.builder()
-                .setSubject(((PrincipalDetails)authentication.getPrincipal()).getUserId().toString()) // payload "sub": "pk"
+                .setSubject(authentication.getName()) // payload "sub": "pk"
                 .claim(AUTHORITIES_KEY,authorities) // payload "auth": "ROLE_USER"
                 .setExpiration(new Date(now.getTime() + JWT_REFRESH_TOKEN_EXPTIME)) // set Expire Time
                 .signWith(refreshKey, SignatureAlgorithm.HS256) // 사용할 암호화 알고리즘과
@@ -110,6 +110,20 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(accessKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+        return new UsernamePasswordAuthenticationToken(claims.getSubject(), "", authorities);
+    }
+
+    public Authentication getAuthenticationFromRef(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(refreshKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
