@@ -1,15 +1,12 @@
 package com.lemusee.lemusee_prj.domain;
 
-import com.lemusee.lemusee_prj.dto.MemberInfoResDto;
+import com.lemusee.lemusee_prj.dto.MemberProfileReqDto;
 import com.lemusee.lemusee_prj.util.converter.RoleConverter;
 import com.lemusee.lemusee_prj.util.converter.TeamConverter;
 import com.lemusee.lemusee_prj.util.type.Role;
 import com.lemusee.lemusee_prj.util.type.Team;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,7 +28,7 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, length = 10)
+    @Column(length = 10)
     @Size(max = 10)
     private String nickname;
 
@@ -66,12 +63,19 @@ public class Member extends BaseTimeEntity{
 
     @Convert(converter = RoleConverter.class)
     private Role role;
-    public void encodePassword(PasswordEncoder passwordEncoder){
+
+    public void encodePassword(PasswordEncoder passwordEncoder, String password) {
         this.password = passwordEncoder.encode(password);
     }
 
-    public void updatePassword(PasswordEncoder passwordEncoder, String newPassword) {
-        this.password = passwordEncoder.encode(newPassword);
+    public void updateProfile(MemberProfileReqDto memberProfileReqDto) {
+        this.nickname = memberProfileReqDto.getNickname();
+        this.birthYear = memberProfileReqDto.getBirthYear();
+        this.department = memberProfileReqDto.getDepartment();
+        this.phone = memberProfileReqDto.getPhone();
+        this.studentId = memberProfileReqDto.getStudentId();
+        this.introduce = memberProfileReqDto.getIntroduce();
+
     }
 
 }

@@ -25,6 +25,7 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
 	implementation('javax.xml.bind:jaxb-api')
+	runtimeOnly 'mysql:mysql-connector-java'
 
 	// jwt
 	implementation('io.jsonwebtoken:jjwt-api:0.11.5')
@@ -32,9 +33,11 @@ dependencies {
 	implementation('io.jsonwebtoken:jjwt-jackson:0.11.5')
 
 	// mapstruct
-	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0' // v1.18.16+ 부터
+	compileOnly 'org.projectlombok:lombok'
 	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0' // v1.18.16+ 부터
 
 	// Swagger
 	implementation ('io.springfox:springfox-boot-starter:3.0.0')
@@ -50,9 +53,6 @@ dependencies {
 	// slack logback
 	implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'mysql:mysql-connector-java'
-	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

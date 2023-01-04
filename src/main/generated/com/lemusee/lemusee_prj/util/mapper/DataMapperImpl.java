@@ -1,37 +1,47 @@
 package com.lemusee.lemusee_prj.util.mapper;
 
 import com.lemusee.lemusee_prj.domain.Member;
-import com.lemusee.lemusee_prj.dto.MemberInfoResDto;
-import com.lemusee.lemusee_prj.dto.MemberInfoResDto.MemberInfoResDtoBuilder;
+import com.lemusee.lemusee_prj.dto.MemberProfileReqDto;
+import com.lemusee.lemusee_prj.dto.MemberProfileResDto;
+import com.lemusee.lemusee_prj.dto.MemberProfileResDto.MemberProfileResDtoBuilder;
 import javax.annotation.processing.Generated;
+import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-02T23:55:32+0900",
+    date = "2023-01-04T03:52:07+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16 (Eclipse Adoptium)"
 )
+@Component
 public class DataMapperImpl implements DataMapper {
 
     @Override
-    public MemberInfoResDto memberToMemberInfoDto(Member member) {
+    public MemberProfileResDto memberToMemberProfileDto(Member member) {
         if ( member == null ) {
             return null;
         }
 
-        MemberInfoResDtoBuilder memberInfoResDto = MemberInfoResDto.builder();
+        MemberProfileResDtoBuilder memberProfileResDto = MemberProfileResDto.builder();
 
-        memberInfoResDto.userId( member.getId() );
-        memberInfoResDto.nickname( member.getNickname() );
-        memberInfoResDto.email( member.getEmail() );
-        memberInfoResDto.birthYear( member.getBirthYear() );
-        memberInfoResDto.department( member.getDepartment() );
-        memberInfoResDto.phone( member.getPhone() );
-        memberInfoResDto.studentId( member.getStudentId() );
-        memberInfoResDto.introduce( member.getIntroduce() );
-        memberInfoResDto.isChief( member.getIsChief() );
+        memberProfileResDto.userId( member.getId() );
+        memberProfileResDto.nickname( member.getNickname() );
+        memberProfileResDto.email( member.getEmail() );
+        memberProfileResDto.birthYear( member.getBirthYear() );
+        memberProfileResDto.department( member.getDepartment() );
+        memberProfileResDto.phone( member.getPhone() );
+        memberProfileResDto.studentId( member.getStudentId() );
+        memberProfileResDto.introduce( member.getIntroduce() );
+        memberProfileResDto.isChief( member.getIsChief() );
 
-        memberInfoResDto.team( member.getTeam().getType() );
+        memberProfileResDto.team( member.getTeam().getType() );
 
-        return memberInfoResDto.build();
+        return memberProfileResDto.build();
+    }
+
+    @Override
+    public void updateMemberProfile(MemberProfileReqDto memberProfileReqDto, Member member) {
+        if ( memberProfileReqDto == null ) {
+            return;
+        }
     }
 }

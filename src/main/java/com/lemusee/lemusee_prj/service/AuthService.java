@@ -43,7 +43,7 @@ public class AuthService {
 
         checkEmailDuplicate(joinReqDto.getEmail());
         Member member = joinReqDto.toMember();
-        member.encodePassword(passwordEncoder);
+        member.encodePassword(passwordEncoder, joinReqDto.getPassword());
         memberRepository.save(member);
     }
 
@@ -100,7 +100,7 @@ public class AuthService {
         String email = patchPasswordReqDto.getEmail();
 
         Member member = memberRepository.findByEmailAndProvider(email,PROVIDER_NONE).orElseThrow(() -> new BaseException(USERS_EMPTY_USER_EMAIL));
-        member.updatePassword(passwordEncoder, patchPasswordReqDto.getNewPassword());
+        member.encodePassword(passwordEncoder, patchPasswordReqDto.getNewPassword());
     }
 
     private Authentication attemptAuthentication(LoginReqDto loginReqDto){

@@ -2,12 +2,10 @@ package com.lemusee.lemusee_prj.service;
 
 import com.lemusee.lemusee_prj.config.jwt.JwtTokenProvider;
 import com.lemusee.lemusee_prj.domain.Member;
-import com.lemusee.lemusee_prj.domain.PrincipalDetails;
-import com.lemusee.lemusee_prj.dto.JoinReqDto;
-import com.lemusee.lemusee_prj.dto.MemberInfoResDto;
+import com.lemusee.lemusee_prj.dto.MemberProfileReqDto;
+import com.lemusee.lemusee_prj.dto.MemberProfileResDto;
 import com.lemusee.lemusee_prj.repository.MemberRepository;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseException;
-import com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus;
 import com.lemusee.lemusee_prj.util.mapper.DataMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +28,9 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public MemberInfoResDto getMemberInfo(String email) throws BaseException{
+    public MemberProfileResDto getMemberProfile(String email) throws BaseException{
         Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BaseException(SERVER_ERROR));
-        return DataMapper.INSTANCE.memberToMemberInfoDto(member);
+        return DataMapper.INSTANCE.memberToMemberProfileDto(member);
     }
 
     public void logout(String accessToken) throws BaseException{
@@ -48,5 +46,10 @@ public class MemberService {
 
         redisTemplate.opsForValue()
                 .set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+    }
+
+    public void modifyMemberProfile(String email, MemberProfileReqDto memberProfileReqDto) throws BaseException{
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BaseException(SERVER_ERROR));
+        DataMapper.INSTANCE.updateMemberProfile(memberProfileReqDto,member);
     }
 }

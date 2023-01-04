@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class MemberInfoResDto {
+public class MemberProfileResDto {
 
     private Integer userId;
     private String nickname;

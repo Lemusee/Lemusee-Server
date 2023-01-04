@@ -20,7 +20,6 @@ public class JoinReqDto {
         return Member.builder()
                 .nickname(nickname)
                 .email(email)
-                .password(password)
                 .team(Team.INACTIVE)
                 .role(Role.USER)
                 .build();
