@@ -13,7 +13,8 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://lemusee.site","https://prod.lemusee.site"));
+//        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://lemusee.site","https://prod.lemusee.site"));
+        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE"));
         configuration.setAllowCredentials(true);
