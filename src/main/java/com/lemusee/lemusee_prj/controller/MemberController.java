@@ -53,6 +53,7 @@ public class MemberController {
             memberService.logout(accessToken);
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException error) {
+            writeExceptionWithAuthorizedRequest(error, request);
             return new BaseResponse<>(error.getStatus());
         }
     }
@@ -69,6 +70,7 @@ public class MemberController {
             memberService.modifyMemberProfile(email, memberProfileReqDto);
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException error) {
+            writeExceptionWithAuthorizedRequest(error, request);
             return new BaseResponse<>(error.getStatus());
         }
     }

@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.SUCCESS;
 import static com.lemusee.lemusee_prj.util.errorLogUtil.ErrorLogWriter.writeExceptionWithRequest;
+import static com.lemusee.lemusee_prj.util.errorLogUtil.ErrorLogWriter.writeExceptionWithRequestNoQuery;
 
 @Slf4j
 @RestController
@@ -107,11 +108,12 @@ public class AuthController {
      * @param email
      */
     @GetMapping("/email")
-    public BaseResponse<BaseResponseStatus> checkEmailDuplicate(@RequestParam(required = true) String email) {
+    public BaseResponse<BaseResponseStatus> checkEmailDuplicate(HttpServletRequest request, @RequestParam(required = true) String email) {
         try {
             authService.checkEmailDuplicate(email);
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException error) {
+            writeExceptionWithRequest(error, request);
             return new BaseResponse<>(error.getStatus());
         }
     }
@@ -128,6 +130,7 @@ public class AuthController {
             authService.checkEmailExistence(email);
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException error) {
+            writeExceptionWithRequest(error, request);
             return new BaseResponse<>(error.getStatus());
         }
     }
