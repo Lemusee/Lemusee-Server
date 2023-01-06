@@ -1,7 +1,6 @@
 package com.lemusee.lemusee_prj.util.mapper;
 
 import com.lemusee.lemusee_prj.domain.Member;
-import com.lemusee.lemusee_prj.dto.MemberProfileReqDto;
 import com.lemusee.lemusee_prj.dto.MemberProfileResDto;
 import com.lemusee.lemusee_prj.dto.MemberProfileResDto.MemberProfileResDtoBuilder;
 import javax.annotation.processing.Generated;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-05T03:29:14+0900",
+    date = "2023-01-07T01:04:34+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16 (Eclipse Adoptium)"
 )
 @Component
@@ -36,12 +35,5 @@ public class DataMapperImpl implements DataMapper {
         memberProfileResDto.team( member.getTeam().getType() );
 
         return memberProfileResDto.build();
-    }
-
-    @Override
-    public void updateMemberProfile(MemberProfileReqDto memberProfileReqDto, Member member) {
-        if ( memberProfileReqDto == null ) {
-            return;
-        }
     }
 }
