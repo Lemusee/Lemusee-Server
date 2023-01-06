@@ -50,6 +50,6 @@ public class MemberService {
 
     public void modifyMemberProfile(String email, MemberProfileReqDto memberProfileReqDto) throws BaseException{
         Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BaseException(SERVER_ERROR));
-        DataMapper.INSTANCE.updateMemberProfile(memberProfileReqDto,member);
+        member.updateProfile(memberProfileReqDto);
     }
 }

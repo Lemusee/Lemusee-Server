@@ -12,7 +12,4 @@ public interface DataMapper {
     @Mapping(source = "id", target = "userId")
     @Mapping(target = "team", expression = "java(member.getTeam().getType())")
     MemberProfileResDto memberToMemberProfileDto(Member member);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateMemberProfile(MemberProfileReqDto memberProfileReqDto, @MappingTarget Member member);
 }

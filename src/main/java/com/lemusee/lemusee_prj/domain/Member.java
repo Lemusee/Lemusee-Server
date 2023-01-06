@@ -69,13 +69,25 @@ public class Member extends BaseTimeEntity{
     }
 
     public void updateProfile(MemberProfileReqDto memberProfileReqDto) {
-        this.nickname = memberProfileReqDto.getNickname();
-        this.birthYear = memberProfileReqDto.getBirthYear();
-        this.department = memberProfileReqDto.getDepartment();
-        this.phone = memberProfileReqDto.getPhone();
-        this.studentId = memberProfileReqDto.getStudentId();
-        this.introduce = memberProfileReqDto.getIntroduce();
-
+        if ( memberProfileReqDto.getNickname() != null ) {
+            this.nickname = memberProfileReqDto.getNickname();
+        }
+        if ( memberProfileReqDto.getBirthYear() != null ) {
+            this.birthYear = memberProfileReqDto.getBirthYear();
+        }
+        if ( memberProfileReqDto.getDepartment() != null ) {
+            this.department = memberProfileReqDto.getDepartment();
+        }
+        if ( memberProfileReqDto.getPhone() != null ) {
+            this.phone = memberProfileReqDto.getPhone();
+        }
+        if ( memberProfileReqDto.getStudentId() != null ) {
+            this.studentId = memberProfileReqDto.getStudentId();
+        }
+        if ( memberProfileReqDto.getIntroduce() != null ) {
+            this.introduce = memberProfileReqDto.getIntroduce();
+        }
     }
+
 
 }
