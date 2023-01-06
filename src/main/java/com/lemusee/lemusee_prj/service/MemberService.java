@@ -18,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.SERVER_ERROR;
-import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.USERS_DISACCORD_PASSWORD;
+import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +31,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public MemberProfileResDto getMemberProfile(String email) throws BaseException{
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BaseException(SERVER_ERROR));
+    public MemberProfileResDto getMemberProfile(String email){
+        Member member = memberRepository.findByEmail(email).get();
         return DataMapper.INSTANCE.memberToMemberProfileDto(member);
     }
 
@@ -52,16 +51,21 @@ public class MemberService {
                 .set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
     }
 
-    public void modifyMemberProfile(String email, MemberProfileReqDto memberProfileReqDto) throws BaseException{
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BaseException(SERVER_ERROR));
+    public void modifyMemberProfile(String email, MemberProfileReqDto memberProfileReqDto) {
+        Member member = memberRepository.findByEmail(email).get();
         member.updateProfile(memberProfileReqDto);
     }
 
     public void modifyPassword(String email, PasswordReqDto passwordReqDto) throws BaseException{
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BaseException(SERVER_ERROR));
+        Member member = memberRepository.findByEmail(email).get();
         if (!passwordEncoder.matches(passwordReqDto.getOldPassword(), member.getPassword())) {
             throw new BaseException(USERS_DISACCORD_PASSWORD);
         }
         member.encodePassword(passwordEncoder, passwordReqDto.getNewPassword());
+    }
+
+    public void removeMember(String email) {
+        Member member = memberRepository.findByEmail(email).get();
+        memberRepository.delete(member);
     }
 }

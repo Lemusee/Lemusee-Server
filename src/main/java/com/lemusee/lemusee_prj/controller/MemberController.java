@@ -33,12 +33,7 @@ public class MemberController {
     @GetMapping("")
     public BaseResponse<MemberProfileResDto> getMemberProfile(HttpServletRequest request) {
         String email = String.valueOf(request.getAttribute("email"));
-        try {
-            return new BaseResponse<>(memberService.getMemberProfile(email));
-        } catch (BaseException error) {
-            writeExceptionWithAuthorizedRequest(error, request);
-            return new BaseResponse<>(error.getStatus());
-        }
+        return new BaseResponse<>(memberService.getMemberProfile(email));
     }
 
     /**
@@ -66,13 +61,8 @@ public class MemberController {
     @PatchMapping("/profile")
     public BaseResponse<BaseResponseStatus> modifyMemberProfile(HttpServletRequest request, MemberProfileReqDto memberProfileReqDto) {
         String email = String.valueOf(request.getAttribute("email"));
-        try {
-            memberService.modifyMemberProfile(email, memberProfileReqDto);
-            return new BaseResponse<>(SUCCESS);
-        } catch (BaseException error) {
-            writeExceptionWithAuthorizedRequest(error, request);
-            return new BaseResponse<>(error.getStatus());
-        }
+        memberService.modifyMemberProfile(email, memberProfileReqDto);
+        return new BaseResponse<>(SUCCESS);
     }
 
     /**
@@ -90,5 +80,18 @@ public class MemberController {
             writeExceptionWithAuthorizedRequest(error, request);
             return new BaseResponse<>(error.getStatus());
         }
+    }
+
+
+    /**
+     * 2.6 회원 탈퇴 API
+     *
+     * @DELETE /members/secession
+     */
+    @DeleteMapping("/secession")
+    public BaseResponse<BaseResponseStatus> removeMember(HttpServletRequest request) {
+        String email = String.valueOf(request.getAttribute("email"));
+        memberService.removeMember(email);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 }
