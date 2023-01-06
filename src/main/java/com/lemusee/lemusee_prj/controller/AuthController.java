@@ -95,7 +95,7 @@ public class AuthController {
         try {
             return new BaseResponse<>(authService.reissue(refreshToken, accessToken));
         } catch (BaseException error) {
-            writeExceptionWithRequest(error, request);
+            writeExceptionWithRequestNoQuery(error, request);
             return new BaseResponse<>(error.getStatus());
         }
     }

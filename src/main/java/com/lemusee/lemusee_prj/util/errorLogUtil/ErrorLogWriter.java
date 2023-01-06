@@ -40,6 +40,17 @@ public class ErrorLogWriter {
      * @param exception
      * @param request
      */
+    public static void writeExceptionWithRequestNoQuery(BaseException exception, HttpServletRequest request) {
+        log.error("{} clientIp: {} - Authorization: {} | uri: {} {}", exception.getStatus().getMessage(), getClientIp(request), request.getHeader("Authorization"),
+                request.getMethod(), request.getRequestURI());
+    }
+
+    /**
+     * 로그에 request 정보, exception 메세지를 남긴다.
+     * Authorization 헤더가 없는 경우
+     * @param exception
+     * @param request
+     */
     public static void writeExceptionWithRequest(BaseException exception, HttpServletRequest request) {
         log.error("{} clientIp: {} - Authorization: {} | uri: {} {} | query string: {}", exception.getStatus().getMessage(), getClientIp(request), request.getHeader("Authorization"),
                 request.getMethod(), request.getRequestURI(), parameterMapToString(request.getParameterMap()));
