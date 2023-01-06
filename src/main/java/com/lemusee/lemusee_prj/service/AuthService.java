@@ -4,11 +4,10 @@ import com.lemusee.lemusee_prj.config.jwt.JwtTokenProvider;
 import com.lemusee.lemusee_prj.domain.Member;
 import com.lemusee.lemusee_prj.dto.JoinReqDto;
 import com.lemusee.lemusee_prj.dto.LoginReqDto;
-import com.lemusee.lemusee_prj.dto.PatchPasswordReqDto;
+import com.lemusee.lemusee_prj.dto.PasswordReqDto;
 import com.lemusee.lemusee_prj.dto.TokenDto;
 import com.lemusee.lemusee_prj.repository.MemberRepository;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseException;
-import com.lemusee.lemusee_prj.util.mapper.DataMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +15,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,12 +92,12 @@ public class AuthService {
         }
     }
 
-    public void modifyPassword(PatchPasswordReqDto patchPasswordReqDto) throws BaseException {
+    public void modifyPassword(PasswordReqDto passwordReqDto) throws BaseException {
 
-        String email = patchPasswordReqDto.getEmail();
+        String email = passwordReqDto.getEmail();
 
         Member member = memberRepository.findByEmailAndProvider(email,PROVIDER_NONE).orElseThrow(() -> new BaseException(USERS_EMPTY_USER_EMAIL));
-        member.encodePassword(passwordEncoder, patchPasswordReqDto.getNewPassword());
+        member.encodePassword(passwordEncoder, passwordReqDto.getNewPassword());
     }
 
     private Authentication attemptAuthentication(LoginReqDto loginReqDto){

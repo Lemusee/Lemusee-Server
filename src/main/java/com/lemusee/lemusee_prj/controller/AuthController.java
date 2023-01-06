@@ -2,7 +2,7 @@ package com.lemusee.lemusee_prj.controller;
 
 import com.lemusee.lemusee_prj.dto.JoinReqDto;
 import com.lemusee.lemusee_prj.dto.LoginReqDto;
-import com.lemusee.lemusee_prj.dto.PatchPasswordReqDto;
+import com.lemusee.lemusee_prj.dto.PasswordReqDto;
 import com.lemusee.lemusee_prj.dto.TokenDto;
 import com.lemusee.lemusee_prj.service.AuthService;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseException;
@@ -139,12 +139,12 @@ public class AuthController {
      * 1.7 비밀번호 재설정 (비 로그인 상태) API
      * @PATCH /auth/password
      *
-     * @param patchPasswordReqDto
+     * @param passwordReqDto
      */
     @PatchMapping("/password")
-    public BaseResponse<BaseResponseStatus> patchPassword(HttpServletRequest request, @RequestBody PatchPasswordReqDto patchPasswordReqDto) {
+    public BaseResponse<BaseResponseStatus> modifyPassword(HttpServletRequest request, @RequestBody PasswordReqDto passwordReqDto) {
         try {
-            authService.modifyPassword(patchPasswordReqDto);
+            authService.modifyPassword(passwordReqDto);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);
         } catch (BaseException error) {
             writeExceptionWithRequest(error, request);

@@ -28,6 +28,7 @@ import java.util.Collection;
 
 import static com.lemusee.lemusee_prj.util.Constant.AUTHORIZATION_HEADER;
 import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.*;
+import static com.lemusee.lemusee_prj.util.errorLogUtil.ErrorLogWriter.writeExceptionWithAuthorizedRequest;
 
 @Slf4j
 @RequiredArgsConstructor

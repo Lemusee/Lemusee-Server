@@ -16,8 +16,8 @@ public class ErrorLogWriter {
      * @param exception
      * @param request
      */
-    public static void writeExceptionWithAuthorizedRequest(Exception exception, HttpServletRequest request) {
-        log.error("{} - user id: {} | uri: {} {} | query string: {}", exception.getMessage(), request.getAttribute("user_id").toString(),
+    public static void writeExceptionWithAuthorizedRequest(BaseException exception, HttpServletRequest request) {
+        log.error("{} - email: {} | uri: {} {} | query string: {}", exception.getStatus().getMessage(), request.getAttribute("email").toString(),
                 request.getMethod(), request.getRequestURI(), parameterMapToString(request.getParameterMap()));
     }
 
@@ -29,13 +29,13 @@ public class ErrorLogWriter {
      * @param request
      * @param messageBody
      */
-    public static void writeExceptionWithAuthorizedRequest(Exception exception, HttpServletRequest request, String messageBody) {
-        log.error("{} - user id: {} | uri: {} {} | query string: {} | body: {}", exception.getMessage(), request.getAttribute("user_id").toString(),
+    public static void writeExceptionWithAuthorizedRequest(BaseException exception, HttpServletRequest request, String messageBody) {
+        log.error("{} - email: {} | uri: {} {} | query string: {} | body: {}", exception.getStatus().getMessage(), request.getAttribute("email").toString(),
                 request.getMethod(), request.getRequestURI(), parameterMapToString(request.getParameterMap()), messageBody);
     }
 
     /**
-     * 로그에 request 정보, exception 메세지를 남긴다.
+     * 로그에 request 정보, exception 메세지를 남긴다. (header x)
      * Authorization 헤더가 없는 경우
      * @param exception
      * @param request

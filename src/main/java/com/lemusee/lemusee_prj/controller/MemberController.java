@@ -2,6 +2,7 @@ package com.lemusee.lemusee_prj.controller;
 
 import com.lemusee.lemusee_prj.dto.MemberProfileReqDto;
 import com.lemusee.lemusee_prj.dto.MemberProfileResDto;
+import com.lemusee.lemusee_prj.dto.PasswordReqDto;
 import com.lemusee.lemusee_prj.service.MemberService;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseException;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseResponse;
@@ -14,8 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static com.lemusee.lemusee_prj.util.Constant.AUTHORIZATION_HEADER;
 import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.SUCCESS;
-import static com.lemusee.lemusee_prj.util.errorLogUtil.ErrorLogWriter.writeExceptionWithAuthorizedRequest;
-import static com.lemusee.lemusee_prj.util.errorLogUtil.ErrorLogWriter.writeExceptionWithRequest;
+import static com.lemusee.lemusee_prj.util.errorLogUtil.ErrorLogWriter.*;
 
 @Slf4j
 @RestController
@@ -75,4 +75,20 @@ public class MemberController {
         }
     }
 
+    /**
+     * 2.5 비밀번호 재설정(로그인 상태) API
+     *
+     * @PATCH /members/password
+     */
+    @PatchMapping("/password")
+    public BaseResponse<BaseResponseStatus> modifyMemberProfile(HttpServletRequest request, @RequestBody PasswordReqDto passwordReqDto) {
+        String email = String.valueOf(request.getAttribute("email"));
+        try {
+            memberService.modifyPassword(email, passwordReqDto);
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        } catch (BaseException error) {
+            writeExceptionWithAuthorizedRequest(error, request);
+            return new BaseResponse<>(error.getStatus());
+        }
+    }
 }
