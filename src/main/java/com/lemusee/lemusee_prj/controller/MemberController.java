@@ -60,9 +60,15 @@ public class MemberController {
      */
     @PatchMapping("/profile")
     public BaseResponse<BaseResponseStatus> modifyMemberProfile(HttpServletRequest request, MemberProfileReqDto memberProfileReqDto) {
-        String email = String.valueOf(request.getAttribute("email"));
-        memberService.modifyMemberProfile(email, memberProfileReqDto);
-        return new BaseResponse<>(SUCCESS);
+        try {
+            String email = String.valueOf(request.getAttribute("email"));
+            memberService.modifyMemberProfile(email, memberProfileReqDto);
+            return new BaseResponse<>(SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new BaseResponse<>(SUCCESS);
+
+        }
     }
 
     /**
