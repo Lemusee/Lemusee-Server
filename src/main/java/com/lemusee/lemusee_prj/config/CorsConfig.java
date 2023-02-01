@@ -13,9 +13,9 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://lemusee.site","https://prod.lemusee.site", "http://localhost"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://lemusee.site", "https://prod.lemusee.site", "http://localhost"));
         configuration.addAllowedHeader("*");
-        configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE","PATCH"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowCredentials(true);
 
         source.registerCorsConfiguration("/**", configuration);

@@ -23,7 +23,7 @@ public class CustomAuthenticationEntryPointHandler implements AuthenticationEntr
         /**
          * 토큰 없는 경우
          */
-        if(exception.isEmpty()) {
+        if (exception.isEmpty()) {
             errorCode = EMPTY_JWT;
             setResponse(response, errorCode);
             return;
@@ -32,7 +32,7 @@ public class CustomAuthenticationEntryPointHandler implements AuthenticationEntr
         /**
          * 토큰 만료된 경우
          */
-        if(exception.equals(EXPIRED_JWT.getCode()+"")) {
+        if (exception.equals(EXPIRED_JWT.getCode() + "")) {
             errorCode = EXPIRED_JWT;
             setResponse(response, errorCode);
             return;
@@ -41,7 +41,7 @@ public class CustomAuthenticationEntryPointHandler implements AuthenticationEntr
         /**
          * 토큰 시그니처가 다른 경우
          */
-        if(exception.equals(INVALID_JWT.getCode()+"")) {
+        if (exception.equals(INVALID_JWT.getCode() + "")) {
             errorCode = INVALID_JWT;
             setResponse(response, errorCode);
         }
@@ -51,7 +51,7 @@ public class CustomAuthenticationEntryPointHandler implements AuthenticationEntr
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write("{" + "\"isSuccess\":false, "
-                + "\"code\":\"" + errorCode.getCode() +"\","
+                + "\"code\":\"" + errorCode.getCode() + "\","
                 + "\"message\":\"" + errorCode.getMessage() + "\"}");
         response.getWriter().flush();
     }

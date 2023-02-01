@@ -40,10 +40,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        if(request.getRequestURI().startsWith("/auth")
-                || request.getRequestURI().startsWith("/favicon")){ // "/auth/*" uri들은 jwt체크 불필요
+        if (request.getRequestURI().startsWith("/auth")
+                || request.getRequestURI().startsWith("/favicon")) { // "/auth/*" uri들은 jwt체크 불필요
             log.info("JWT 인증 통과");
-            chain.doFilter(request,response);
+            chain.doFilter(request, response);
             return;
         }
         log.info("JWT 인증 시작");

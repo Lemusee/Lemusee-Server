@@ -31,12 +31,12 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public MemberProfileResDto getMemberProfile(String email){
+    public MemberProfileResDto getMemberProfile(String email) {
         Member member = memberRepository.findByEmail(email).get();
         return DataMapper.INSTANCE.memberToMemberProfileDto(member);
     }
 
-    public void logout(String accessToken) throws BaseException{
+    public void logout(String accessToken) throws BaseException {
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
         // Redis 에서 해당 User email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제
@@ -56,7 +56,7 @@ public class MemberService {
         member.updateProfile(memberProfileReqDto);
     }
 
-    public void modifyPassword(String email, PasswordReqDto passwordReqDto) throws BaseException{
+    public void modifyPassword(String email, PasswordReqDto passwordReqDto) throws BaseException {
         Member member = memberRepository.findByEmail(email).get();
         if (!passwordEncoder.matches(passwordReqDto.getOldPassword(), member.getPassword())) {
             throw new BaseException(USERS_DISACCORD_PASSWORD);

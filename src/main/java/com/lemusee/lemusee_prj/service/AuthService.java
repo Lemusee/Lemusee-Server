@@ -29,7 +29,8 @@ import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.*;
 @Transactional
 @Slf4j
 public class AuthService {
-    @Value("${jwt.time.refresh}") private Long JWT_REFRESH_TOKEN_EXPTIME;
+    @Value("${jwt.time.refresh}")
+    private Long JWT_REFRESH_TOKEN_EXPTIME;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -65,28 +66,28 @@ public class AuthService {
         return tokenDto;
     }
 
-    public String reissue(String refreshToken, String accessToken) throws BaseException{
+    public String reissue(String refreshToken, String accessToken) throws BaseException {
         jwtTokenProvider.checkAccessTokenExpiration(accessToken);
         jwtTokenProvider.validRefreshToken(refreshToken);
 
         Authentication authentication = jwtTokenProvider.getAuthenticationFromRef(refreshToken);
 
         String redisRefreshToken = String.valueOf(redisTemplate.opsForValue().get("refreshToken:" + authentication.getName()));
-        if(!redisRefreshToken.equals(refreshToken)) {
+        if (!redisRefreshToken.equals(refreshToken)) {
             throw new BaseException(DIFFERENT_REFRESH_TOKEN);
         }
         return jwtTokenProvider.createAccessToken(authentication);
     }
 
     @Transactional(readOnly = true)
-    public void checkEmailDuplicate(String email) throws BaseException{
+    public void checkEmailDuplicate(String email) throws BaseException {
         if (memberRepository.existsByEmailAndProvider(email, PROVIDER_NONE)) {
             throw new BaseException(USERS_EXISTS_EMAIL);
         }
     }
 
     @Transactional(readOnly = true)
-    public void checkEmailExistence(String email) throws BaseException{
+    public void checkEmailExistence(String email) throws BaseException {
         if (!memberRepository.existsByEmailAndProvider(email, PROVIDER_NONE)) {
             throw new BaseException(USERS_EMPTY_USER_EMAIL);
         }
@@ -96,11 +97,11 @@ public class AuthService {
 
         String email = passwordReqDto.getEmail();
 
-        Member member = memberRepository.findByEmailAndProvider(email,PROVIDER_NONE).orElseThrow(() -> new BaseException(USERS_EMPTY_USER_EMAIL));
+        Member member = memberRepository.findByEmailAndProvider(email, PROVIDER_NONE).orElseThrow(() -> new BaseException(USERS_EMPTY_USER_EMAIL));
         member.encodePassword(passwordEncoder, passwordReqDto.getNewPassword());
     }
 
-    private Authentication attemptAuthentication(LoginReqDto loginReqDto){
+    private Authentication attemptAuthentication(LoginReqDto loginReqDto) {
 
         // 1. Email/PW 기반 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
@@ -110,7 +111,6 @@ public class AuthService {
         // authenticate 매서드가 실행될 때 PrincipalDetailsService 에서 만든 loadUserByUsername 메서드가 실행
         return authenticationManagerBuilder.getObject().authenticate(authenticationToken);
     }
-
 
 
 }

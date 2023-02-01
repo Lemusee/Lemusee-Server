@@ -60,10 +60,11 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .anyRequest().authenticated();
-                // .antMatchers("/").permitAll()
+        // .antMatchers("/").permitAll()
 
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();

@@ -15,7 +15,7 @@ import java.util.Collection;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrincipalDetails implements UserDetails{
+public class PrincipalDetails implements UserDetails {
     private Integer userId;
     private String email;
     private String password;

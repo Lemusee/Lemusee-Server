@@ -31,12 +31,16 @@ import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.*;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
-    @Value("${jwt.time.access}") private Long JWT_ACCESS_TOKEN_EXPTIME;
-    @Value("${jwt.time.refresh}") private Long JWT_REFRESH_TOKEN_EXPTIME;
-    @Value("${jwt.secret.access}") private String JWT_ACCESS_SECRET_KEY;
-    @Value("${jwt.secret.refresh}") private String JWT_REFRESH_SECRET_KEY;
+    @Value("${jwt.time.access}")
+    private Long JWT_ACCESS_TOKEN_EXPTIME;
+    @Value("${jwt.time.refresh}")
+    private Long JWT_REFRESH_TOKEN_EXPTIME;
+    @Value("${jwt.secret.access}")
+    private String JWT_ACCESS_SECRET_KEY;
+    @Value("${jwt.secret.refresh}")
+    private String JWT_REFRESH_SECRET_KEY;
     private Key accessKey;
-    private  Key refreshKey;
+    private Key refreshKey;
 
     @PostConstruct
     public void initialize() {
@@ -63,9 +67,9 @@ public class JwtTokenProvider {
                 .signWith(accessKey, SignatureAlgorithm.HS512)  // 사용할 암호화 알고리즘과
                 .compact();
 
-        String refreshToken =  Jwts.builder()
+        String refreshToken = Jwts.builder()
                 .setSubject(authentication.getName()) // payload "sub"
-                .claim(AUTHORITIES_KEY,authorities) // payload "auth": "ROLE_USER"
+                .claim(AUTHORITIES_KEY, authorities) // payload "auth": "ROLE_USER"
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + JWT_REFRESH_TOKEN_EXPTIME)) // set Expire Time
                 .signWith(refreshKey, SignatureAlgorithm.HS512) // 사용할 암호화 알고리즘과
@@ -84,7 +88,7 @@ public class JwtTokenProvider {
         Date now = new Date();
         return Jwts.builder()
                 .setSubject(authentication.getName()) // payload "sub"
-                .claim(AUTHORITIES_KEY,authorities) // payload "auth": "ROLE_USER"
+                .claim(AUTHORITIES_KEY, authorities) // payload "auth": "ROLE_USER"
                 .setExpiration(new Date(now.getTime() + JWT_ACCESS_TOKEN_EXPTIME)) // set Expire Time
                 .signWith(accessKey, SignatureAlgorithm.HS256)  // 사용할 암호화 알고리즘과
                 .compact();
@@ -100,7 +104,7 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(authentication.getName()) // payload "sub"
-                .claim(AUTHORITIES_KEY,authorities) // payload "auth": "ROLE_USER"
+                .claim(AUTHORITIES_KEY, authorities) // payload "auth": "ROLE_USER"
                 .setExpiration(new Date(now.getTime() + JWT_REFRESH_TOKEN_EXPTIME)) // set Expire Time
                 .signWith(refreshKey, SignatureAlgorithm.HS256) // 사용할 암호화 알고리즘과
                 // signature 에 들어갈 secret값 세팅

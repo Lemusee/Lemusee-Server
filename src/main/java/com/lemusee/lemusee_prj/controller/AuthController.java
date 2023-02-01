@@ -36,8 +36,8 @@ public class AuthController {
 
     /**
      * 1.1 일반 회원가입 API
-     * @POST /auth/join
      *
+     * @POST /auth/join
      * @Body joinRequestDto
      */
     @PostMapping("/join")
@@ -53,10 +53,10 @@ public class AuthController {
 
     /**
      * 1.2 일반 로그인 API
-     * @POST /auth/login
      *
-     * @Body loginRequestDto
      * @return accessToken
+     * @POST /auth/login
+     * @Body loginRequestDto
      **/
     @PostMapping("/login")
     public BaseResponse<String> login(@RequestBody LoginReqDto loginReqDto) {
@@ -65,10 +65,10 @@ public class AuthController {
 
     /**
      * 1.3 자동 로그인 API
-     * @POST /auth/login/auto
      *
-     * @body loginRequestDto
      * @return accessToken
+     * @POST /auth/login/auto
+     * @body loginRequestDto
      **/
     @PostMapping("/login/auto")
     public BaseResponse<String> loginAuto(@RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
@@ -86,10 +86,11 @@ public class AuthController {
 
     /**
      * 1.4 토큰 재발급 api
+     *
+     * @return accessToken
      * @POST /auth/jwt
      * access token 만료시 재발급
      * @cookie refreshToken
-     * @return accessToken
      */
     @PostMapping("/jwt")
     public BaseResponse<String> reissue(HttpServletRequest request, @CookieValue(value = "refreshToken", required = false) String refreshToken, @RequestBody String accessToken) {
@@ -103,9 +104,9 @@ public class AuthController {
 
     /**
      * 1.5 이메일 중복 체크 api
-     * @GET /email?email=
      *
      * @param email
+     * @GET /email?email=
      */
     @GetMapping("/email")
     public BaseResponse<BaseResponseStatus> checkEmailDuplicate(HttpServletRequest request, @RequestParam(required = true) String email) {
@@ -120,9 +121,9 @@ public class AuthController {
 
     /**
      * 1.6 이메일 유효성 체크 api
-     * @GET /auth/email/existence?email=
      *
      * @param email
+     * @GET /auth/email/existence?email=
      */
     @GetMapping("/email/existence")
     public BaseResponse<String> checkEmailExistence(HttpServletRequest request, @RequestParam(required = true) String email) {
@@ -137,9 +138,9 @@ public class AuthController {
 
     /**
      * 1.7 비밀번호 재설정 (비 로그인 상태) API
-     * @PATCH /auth/password
      *
      * @param passwordReqDto
+     * @PATCH /auth/password
      */
     @PatchMapping("/password")
     public BaseResponse<BaseResponseStatus> modifyPassword(HttpServletRequest request, @RequestBody PasswordReqDto passwordReqDto) {

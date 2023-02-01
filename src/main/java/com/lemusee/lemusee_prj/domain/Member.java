@@ -20,7 +20,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Member extends BaseTimeEntity{
+public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -69,22 +69,22 @@ public class Member extends BaseTimeEntity{
     }
 
     public void updateProfile(MemberProfileReqDto memberProfileReqDto) {
-        if ( memberProfileReqDto.getNickname() != null ) {
+        if (memberProfileReqDto.getNickname() != null) {
             this.nickname = memberProfileReqDto.getNickname();
         }
-        if ( memberProfileReqDto.getBirthYear() != null ) {
+        if (memberProfileReqDto.getBirthYear() != null) {
             this.birthYear = memberProfileReqDto.getBirthYear();
         }
-        if ( memberProfileReqDto.getDepartment() != null ) {
+        if (memberProfileReqDto.getDepartment() != null) {
             this.department = memberProfileReqDto.getDepartment();
         }
-        if ( memberProfileReqDto.getPhone() != null ) {
+        if (memberProfileReqDto.getPhone() != null) {
             this.phone = memberProfileReqDto.getPhone();
         }
-        if ( memberProfileReqDto.getStudentId() != null ) {
+        if (memberProfileReqDto.getStudentId() != null) {
             this.studentId = memberProfileReqDto.getStudentId();
         }
-        if ( memberProfileReqDto.getIntroduce() != null ) {
+        if (memberProfileReqDto.getIntroduce() != null) {
             this.introduce = memberProfileReqDto.getIntroduce();
         }
     }
