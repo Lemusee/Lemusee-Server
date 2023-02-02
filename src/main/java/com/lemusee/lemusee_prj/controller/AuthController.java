@@ -5,6 +5,7 @@ import com.lemusee.lemusee_prj.dto.LoginReqDto;
 import com.lemusee.lemusee_prj.dto.PasswordReqDto;
 import com.lemusee.lemusee_prj.dto.TokenDto;
 import com.lemusee.lemusee_prj.service.AuthService;
+import com.lemusee.lemusee_prj.service.YoutubeService;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseException;
 import com.lemusee.lemusee_prj.util.baseUtil.BaseResponse;
 
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import static com.lemusee.lemusee_prj.util.baseUtil.BaseResponseStatus.SUCCESS;
 import static com.lemusee.lemusee_prj.util.errorLogUtil.ErrorLogWriter.writeExceptionWithRequest;
@@ -33,6 +38,8 @@ public class AuthController {
     private Long JWT_REFRESH_TOKEN_EXPTIME;
 
     private final AuthService authService;
+    private final YoutubeService youtubeService;
+
 
     /**
      * 1.1 일반 회원가입 API
@@ -151,5 +158,10 @@ public class AuthController {
             writeExceptionWithRequest(error, request);
             return new BaseResponse<>(error.getStatus());
         }
+    }
+
+    @GetMapping("/youtube")
+    public void getPlaylistInfo(@RequestParam(required = true) String playlistId) throws Exception {
+        youtubeService.addPlaylistVideos(playlistId);
     }
 }

@@ -52,6 +52,7 @@ dependencies {
 
 	// slack logback
 	implementation 'com.github.maricn:logback-slack-appender:1.4.0'
+	implementation 'org.json:json:20160810'
 	implementation 'com.google.code.gson:gson:2.8.6'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
